@@ -24,8 +24,7 @@ To create a conda environment called semisup-adv containing all the dependencies
 conda env create -f environment.yml  
 ```  
   
-Note: We tested this code on GPUs with 12GB of memory.   
-Running on CPUs or GPUs with less memory might require adjustments.  
+Note: We tested this code on GPUs with 12GB of memory. Running on CPUs or GPUs with less memory might require adjustments.  
   
 The code in this repo is based on code from the following sources:  
 - TRADES: https://github.com/yaodongyu/TRADES  
@@ -37,9 +36,7 @@ The code in this repo is based on code from the following sources:
 - CIFAR-10.1: https://github.com/modestyachts/CIFAR-10.1
   
 ## Running robust self-training  
-To run robust self-training you will a pickle file containing pseudo-labeled data.   
-You can download ```ti_500K_pseudo_labeled.pickle``` containing our 500K pseudo-labeled TinyImages,  
-or you can generate one from scratch using the instructions below.  
+To run robust self-training you will a pickle file containing pseudo-labeled data. You can download ```ti_500K_pseudo_labeled.pickle``` containing our 500K pseudo-labeled TinyImages, or you can generate one from scratch using the instructions below.  
   
 ### Adversarial training with TRADES  
 The following command performs adversarial training and produces a model  
@@ -48,8 +45,7 @@ equivalent to  RST_adv(50K+500K) described in the paper.
 python robust_self_training.py --aux_data_filename ti_500K_pseudo_labeled.pickle --distance l_inf --epsilon 0.031 --model_dir rst_adv 
 ```  
   
-When the script finishes running there will a be checkpoint file called `rst_adv/checkpoint-epoch200.pt`.  
-The following commands runs a PGD attack (PGD_Ours from the paper) on the model  
+When the script finishes running there will a be checkpoint file called `rst_adv/checkpoint-epoch200.pt`. The following commands runs a PGD attack (PGD_Ours from the paper) on the model  
 ```  
 python attack_evaluation.py --model_path rst_adv/checkpoint-epoch200.pt --attack pgd --output_suffix pgd_ours  
 ```  
@@ -66,10 +62,9 @@ RST_stab(50K+500K) described in the paper.
 python robust_self_training.py --aux_data_filename ti_500K_pseudo_labeled.pickle --distance l_2 --epsilon 0.25 --model_dir rst_stab --epochs 800
  ```
  
-When the script finishes running there will a be checkpoint file called `rst_stab/checkpoint-epoch800.pt`.  
-The following commands runs randomized smoothing certification on the model, as described in the paper.  
+When the script finishes running there will a be checkpoint file called `rst_stab/checkpoint-epoch800.pt`.  The following commands runs randomized smoothing certification on the model, as described in the paper.  
 ```  
-python smoothing_evaluation.py --model_path rst_stab/checkpoint-epoch800.pt --simga 0.25  
+python smoothing_evaluation.py --model_path rst_stab/checkpoint-epoch800.pt --sigma 0.25  
 ```
   
 ## Creating the unlabeled data from scratch  
@@ -81,7 +76,7 @@ Create a data directory that has the following files:
 - [tiny_images.bin](http://horatio.cs.nyu.edu/mit/tiny/data/tiny_images.bin)
 - [TinyImages keyword information](https://drive.google.com/open?id=1OaAGYLxr62t7Zby6F0jScMORnadk6Oz2)
 
-### Step one: Tiny Image Preliminaries  
+### Step one: Tiny Image preliminaries  
 In this step, we do the following two preliminary steps.   
 1) Compute distances from all the TinyImages to CIFAR-10 test set, in order to ensure we do *not* add any images from the test set to the unlabeled data sourced from TinyImages.   
 2) Create train/test data for selection model (See Appendix B.6)  
@@ -94,8 +89,7 @@ Here is an example run.
  ```  
   
 ### Step two: Train a selection model
-Here we train the data selection model described in Appendix B.6 of the paper.    
-Note that `data_dir` should contain the following files: `tiny_images.bin`, `ti_vs_cifar_inds.pickle` (from above).   
+Here we train the data selection model described in Appendix B.6 of the paper.  Note that `data_dir` should contain the following files: `tiny_images.bin`, `ti_vs_cifar_inds.pickle` (from above).   
   
 Here is an example run.   
 
@@ -119,7 +113,7 @@ python robust_self_training.py --distance l_2 --beta 0 --unsup_fraction 0 --mode
  ```
 
 ### Step five: Generating pseudo-labels 
-As a final step, we generate pseudo-labels by applying the classifier from Step 4 on the unlabeled data sourced in Step 5.   
+As a final step, we generate pseudo-labels by applying the classifier from Step 4 on the unlabeled data sourced in Step 3.   
   
  ```
 python generate_pseudolabels.py --model_dir ../vanilla  --model_epoch 200 --data_dir ../data/ --data_filename ti_500K_unlabeled.pickle --output_dir ../data/ --output_filename ti_500K_pseudo_labeled.pickle  
