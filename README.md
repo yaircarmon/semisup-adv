@@ -24,7 +24,7 @@ To create a conda environment called semisup-adv containing all the dependencies
 conda env create -f environment.yml  
 ```  
   
-Note: We tested this code on GPUs with 12GB of memory. Running on CPUs or GPUs with less memory might require adjustments.  
+Note: We tested this code on 2 GPUs in parallel, each with 12GB of memory. Running on CPUs or GPUs with less memory might require adjustments.  
   
 The code in this repo is based on code from the following sources:  
 - TRADES: https://github.com/yaodongyu/TRADES  
